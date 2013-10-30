@@ -211,7 +211,12 @@ F,[no]fetch       Fetch from origin before performing local operation
 	run_pre_hook "$VERSION_PREFIX$NAME" "$ORIGIN" "$BRANCH" "$base"
 
 	# Create branch
-	git_do checkout -b "$BRANCH" "$base"  || die "Could not create hotfix branch '$BRANCH'."
+	if ! git_do checkout -b "$BRANCH" "$base"; then
+	  die "Could not create hotfix branch '$BRANCH'."
+	else
+	  echo 'Enter the JIRA story id if you like (e.g., APP-1234):'
+	  git_do branch --edit-description
+	fi
 
 	run_post_hook "$VERSION_PREFIX$NAME" "$ORIGIN" "$BRANCH" "$base"
 

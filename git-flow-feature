@@ -210,7 +210,12 @@ F,[no]fetch      Fetch from origin before performing local operation
 
 
 	# create branch
-	git_do checkout -b "$BRANCH" "$base" || die "Could not create feature branch '$BRANCH'."
+	if ! git_do checkout -b "$BRANCH" "$base"; then
+	  die "Could not create feature branch '$BRANCH'."
+	else
+	  git_do branch --edit-description
+	fi
+
 
 	run_post_hook "$NAME" "$ORIGIN" "$BRANCH" "$base"
 
